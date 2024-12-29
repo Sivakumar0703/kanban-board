@@ -1,0 +1,28 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* *{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+/* custom styles */
+html.dark{
+  @apply bg-gray-900 text-white;
+}
+
+html.light{
+  @apply bg-white text-black;
+}
+
+.rotate-360 { 
+  transition: transform 0.5s; 
+  transform: rotate(0deg); 
+} 
+
+.rotate-360-active { 
+  transform: rotate(360deg); 
+}
