@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuid } from "uuid";
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask, editTask } from '../../redux/slices/tasksSlice';
+import { addTask, editTask } from '../../redux/slices/boardsSlice';
+import { isArray } from 'lodash';
+// import { addTask, editTask } from '../../redux/slices/tasksSlice';
 
 const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevColIndex=0}) => {
 
@@ -14,10 +16,11 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
         {title:"" , isCompleted:false , id:uuid()},
     ]);
     const boards = useSelector(state => state.boards);
-    const isBoardActive = boards.find(brd => brd.isActive);
-    const columns = isBoardActive.columns; // options for select tag
-    const col = columns.find((col, index) => prevColIndex === index);
-    const [status, setStatus] = useState(columns[prevColIndex].name);
+    const isBoardActive = boards?.find(brd => brd.isActive);
+    const columns = isBoardActive?.columns; // options for select tag
+    const col = columns?.find((col, index) => prevColIndex === index);
+    const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
+    const [status, setStatus] = useState(columns[prevColIndex]?.name);
     const [newColIndex, setNewColIndex] = useState(0); // after changing the task from one column to another - index mentions the status(todo,doing,done)
 
     const dispatch = useDispatch();
@@ -51,6 +54,15 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
         setStatus(event.target.value);
         console.log('selected index - ',event.target.selectedIndex)
         setNewColIndex(event.target.selectedIndex); // get the index of selected option tag(status)
+    }
+
+    // add new sub-task
+    function addnewSubTask(){
+        setSubTask((subtask) => {
+            return [...subtask,
+                {title:"", isCompleted:false, id:uuid()}
+            ];
+        })
     }
 
     // save the task
@@ -87,8 +99,20 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
         type === "add" ? dispatch(addTask(task)) : dispatch(editTask({...task,prevColIndex,taskIndex})) ;
         setIsTaskModelOpen(false);
 
-        
     } 
+
+    // attach id
+    useEffect(() => {
+        if(type === "edit"){
+            setSubTask(
+                task.subTasks.map((sub) => {
+                    return {...sub, id:uuid()}
+                })
+            );
+            setTitle(task.title);
+            setDescription(task.description);
+        }
+    },[]);
 
   return (
     <div
@@ -154,7 +178,8 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
                 </div>
 
                 {/* add new task */}
-                <button className="items-center w-full py-2 text-white bg-[#635fc7] dark:text-[#635fc7] dark:bg-white rounded-full">
+                <button className="items-center w-full py-2 text-white bg-[#635fc7] dark:text-[#635fc7] dark:bg-white rounded-full"
+                onClick={addnewSubTask}>
                     + Add New Subtask
                 </button>
             </div>

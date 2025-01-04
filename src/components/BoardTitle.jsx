@@ -1,35 +1,88 @@
 import { faChevronDown, faChevronUp, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BoardsDropdown from './BoardsDropdown'
 import CreareAndEditBoard from './modals/CreareAndEditBoard'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CreateAndEditTask from './modals/CreateAndEditTask'
+import EllipsisOptions from './EllipsisOptions'
+import EllipsisDeleteModel from './modals/EllipsisDeleteModel'
+import { deleteBoard, setBoardStatusActive } from '../redux/slices/boardsSlice'
+import EmptyBoard from './EmptyBoard'
+import BoardArea from './BoardArea'
 
 const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
 
     const [isDropDownOpen , setIsDropDownOpen] = useState(false);
-    const [isTaskModelOpen, setIsTaskModelOpen] = useState(false);
+    const [isTaskModelOpen, setIsTaskModelOpen] = useState(false); // to open and close task model
+    const [isEllipsisOpen, setIsEllipsisOpen] = useState(false);
+    const [mode, setMode] = useState('add'); // board mode - add | edit
+    const [isDeleteModelOpen , setIsDeleteModelOpen] = useState(false);
     const boards = useSelector((state) => state.boards);
     const board = boards?.find((board) => board.isActive);  
+    const dispatch = useDispatch();
+// for displaying boards
+    const activeBoard = boards.find((board) => board.isActive);
+  
+    
+
+    // handle the ellipsis menu on click
+    function handleEllipsis(){
+        setMode('edit');
+        setIsDropDownOpen(false);
+        setIsEllipsisOpen(prev => !prev);
+    }
+
+    // to add new board
+    function handleDropdown(){
+        setIsDropDownOpen(prev => !prev);
+        setIsEllipsisOpen(false);
+        setMode("add");
+    }
+
+    // open board model for editing
+    function openBoardModelForEditing(){
+        setIsBoardModalOpen(true);
+        setIsEllipsisOpen(false);
+    }
+
+    // open board model for deleting
+    function openBoardModelForDeleting(){
+        setIsDeleteModelOpen(true);
+        setIsEllipsisOpen(false);
+    }
+
+    // to delete the board/task
+    function deleteOnclick(){
+        dispatch(deleteBoard());
+        dispatch(setBoardStatusActive({index:0}));
+        setIsDeleteModelOpen(false);
+    }
+
+    // /////////////////////////////////
+    useEffect(() => {
+        if(!activeBoard && boards.length > 0){
+          dispatch(setBoardStatusActive({index:0}));
+        }
+    });
 
   return (
-    <div className="flex flex-col w-screen">
+    <div className="flex flex-col h-[100vh] w-screen">
 
-    <div className="flex justify-between items-baseline h-[60px] bg-blue-700">
+    <div className="flex justify-between items-center h-[65px] bg-blue-700">
         {/* board name */}
         <div className="flex items-baseline">
-            <h1 className="ml-5 text-2xl font-extrabold"> {board?.name?.toUpperCase()} </h1>
+            <h1 className="ml-5 text-lg md:text-2xl font-extrabold"> {board?.name?.toUpperCase()} </h1>
 
             {/* dropdown */}
-            <span className="cursor-pointer ml-2" onClick={() => setIsDropDownOpen(prev => !prev)}>
+            <span className="cursor-pointer ml-2" onClick={handleDropdown}>
             <FontAwesomeIcon icon={isDropDownOpen ? faChevronUp : faChevronDown} />
             </span>
         </div>
 
         {/* add task */}
-        <div>
+        <div className="flex items-center">
             <button className="hidden md:block p-2 m-2 bg-slate-50 text-black rounded-lg"
             onClick={() => setIsTaskModelOpen(prev => !prev)}> 
             Add New Task + 
@@ -40,9 +93,14 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
                 + 
             </button>
 
-            <span className="cursor-pointer">
+            <span className="cursor-pointer m-3" onClick={handleEllipsis} >
             <FontAwesomeIcon icon={faEllipsisVertical} />
             </span>
+            {
+                isEllipsisOpen && <EllipsisOptions type="Boards"
+                openBoardModelForEditing={openBoardModelForEditing}
+                openBoardModelForDeleting={openBoardModelForDeleting} />
+            }
         </div>
 
         {/* dropdown that lists all boards */}
@@ -54,13 +112,31 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
 
         {/* modal to create new board */}
         {
-            isBoardModalOpen && <CreareAndEditBoard setIsBoardModalOpen={setIsBoardModalOpen} type="add" /> // type: add
+            isBoardModalOpen && <CreareAndEditBoard setIsBoardModalOpen={setIsBoardModalOpen} type={mode} /> // type = board mode
         }
 
         {/* modal to create new or edit the existing task */}
         {
             isTaskModelOpen && <CreateAndEditTask device="mobile" type="add" setIsTaskModelOpen={setIsTaskModelOpen}  />
         }
+
+        {/* ellipsis delete model */}
+        {
+            isDeleteModelOpen && <EllipsisDeleteModel type="board" title={board.name} setIsDeleteModelOpen={setIsDeleteModelOpen} deleteOnclick={deleteOnclick} />
+        }
+
+        {/* board area */}
+        {
+            boards.length > 0 ? 
+            <div className="flex-grow">
+                <BoardArea isBoardModalOpen={isBoardModalOpen} setIsBoardModalOpen={setIsBoardModalOpen} />
+            </div>
+            :
+            <div className="flex-grow">
+                <EmptyBoard type="add" />
+            </div>
+        }
+        
     </div>
 
   )

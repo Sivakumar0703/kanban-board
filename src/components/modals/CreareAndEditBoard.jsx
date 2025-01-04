@@ -1,7 +1,7 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {v4 as uuid} from "uuid";
 import { addBoard, editBoard } from '../../redux/slices/boardsSlice';
 
@@ -12,7 +12,9 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
     { name:'Todo', task: [], id: uuid() },
     { name:'Doing', task: [], id: uuid() },
   ]);
+  const board = useSelector((state) => state.boards).find((board) => board.isActive);
   const dispatch = useDispatch();
+  const taskSectionRef = useRef(null);
 
   function handleModel(event){
     if(event.target !== event.currentTarget){
@@ -38,8 +40,18 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
 
   // add a new column
   function handleAddColumn(){
-    setColumns((prevCol) => [...prevCol , { name:'', task: [], id: uuid() }])
+    setColumns((prevCol) => [...prevCol , { name:'', tasks: [], id: uuid() }])
   }
+
+  // scroll to the bottom of the task section whenever a new task is added 
+  useEffect(() => { 
+    if (taskSectionRef.current) {
+        taskSectionRef.current.scrollTo({
+        top: taskSectionRef.current.scrollHeight,
+        behavior: 'smooth', 
+      }); 
+    } 
+  }),[columns];
 
   // perform the adding/editing board operation
   function handleBoardValidation(){
@@ -60,17 +72,30 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
   }
 
   function handleAddOrEditBoard(hasErrorInValidation = false){
+    console.log("hasErrorInValidation" , hasErrorInValidation)
     setIsBoardModalOpen(false);
-    hasErrorInValidation ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
+    if(hasErrorInValidation){
+      type === "add" ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
+    }
+    // hasErrorInValidation ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
   } 
+
+  // make sure it runs on first render only - assigning id to all the columns
+  useEffect(() => {
+    if(type === "edit"){
+      const setId = board.columns.map((col) => ({...col, id:uuid()}));
+      setColumns(setId);
+    }
+    setName(board?.name);
+  },[])
 
   return (
     <div className="fixed right-0 left-0 top-0 bottom-0 px-2 overflow-scroll z-50 flex justify-center items-center bg-[#00000080] scrollbar-hidden"
     onClick={handleModel}
     >
       
-      <div className="max-h-[80vh] bg-white dark:bg-[#2b2c37] text-black dark:text-white 
-      max-w-md mx-auto w-full px-8 py-8 rounded-xl">
+      <div className="max-h-[85vh] bg-white dark:bg-[#2b2c37] text-black dark:text-white 
+      max-w-md mx-auto w-full px-8 py-8 rounded-xl ">
         {/* title */}
         <h3 className="text-lg">
           { type === "edit" ? "Edit" : "Add New" } Board
@@ -84,17 +109,18 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
           placeholder="web design" value={name} onChange={(event) => setName(event.target.value)} />
         </div>
 
-        {/* board columns */}
-        <div className="flex flex-col mt-8 space-y-3">
-          <span className="text-gray-500 dark:text-white text-sm"> Board Columns </span>
 
+        {/* board columns */}
+        <div className="flex flex-col mt-8 space-y-3  " >
+          <span className="text-gray-500 dark:text-white text-sm"> Board Columns </span>
+          <div className="max-h-[150px] overflow-y-scroll" ref={taskSectionRef}>
           {
             columns.map((column, index) => (
-              <div key={column.name + index} className="flex items-center w-full">
+              <div key={index} className="flex items-center w-full">
                   <input
                   className="flex-grow px-4 py-2 rounded-md bg-transparent border border-gray-600 outline-none focus:outline-[#735fc7]"
                   value={column.name} 
-                  onChange={(event) => handleColumnNameChange(column.id, event.target.value) }
+                  onChange={(event) => {handleColumnNameChange(column.id, event.target.value)} }
                   />
 
                   {/* adding delete column icon */}
@@ -103,7 +129,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
                   </span>
               </div>
             ))
-          }
+          } </div>
         </div>
         {/* add new column button */}
         <div>
