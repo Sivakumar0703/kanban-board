@@ -173,6 +173,7 @@ const TaskModel = ({colIndex, taskIndex, setIsTaskModelOpen}) => {
             setIsTaskModelOpen={setIsTaskModelOpen}
             taskIndex={taskIndex}
             prevColIndex={colIndex}
+            // setIsBoardModalOpen={setIsBoardModalOpen}
             />
         )
     }

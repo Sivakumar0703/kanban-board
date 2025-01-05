@@ -3,18 +3,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {v4 as uuid} from "uuid";
-import { addBoard, editBoard } from '../../redux/slices/boardsSlice';
+import { addBoard, editBoard, setBoardStatusActive } from '../../redux/slices/boardsSlice';
 
 const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
+  console.log("type in board model",type)
 
   const [name, setName] = useState('');
   const [columns, setColumns] = useState([
-    { name:'Todo', task: [], id: uuid() },
-    { name:'Doing', task: [], id: uuid() },
+    { name:'Todo', tasks: [], id: uuid() },
+    { name:'Processing', tasks: [], id: uuid() }, // Doing
+    { name:'Completed', tasks: [], id: uuid() }, // Completed
   ]);
   const board = useSelector((state) => state.boards).find((board) => board.isActive);
   const dispatch = useDispatch();
   const taskSectionRef = useRef(null);
+  const allBoards = useSelector((state) => state.boards);
 
   function handleModel(event){
     if(event.target !== event.currentTarget){
@@ -40,7 +43,13 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
 
   // add a new column
   function handleAddColumn(){
-    setColumns((prevCol) => [...prevCol , { name:'', tasks: [], id: uuid() }])
+    setColumns((prevCol) => {
+      console.log("perv-col", prevCol);
+      if(prevCol === undefined){
+        return [{name:"", tasks:[], id:uuid()}]
+      }
+      return [...prevCol , { name:'', tasks: [], id: uuid() }]
+    })
   }
 
   // scroll to the bottom of the task section whenever a new task is added 
@@ -77,16 +86,21 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
     if(hasErrorInValidation){
       type === "add" ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
     }
+    if(type === "add"){
+      console.log("###########",allBoards.length)
+      allBoards?.length > 0 ? dispatch(setBoardStatusActive({index:allBoards.length})) : ""  
+    }
     // hasErrorInValidation ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
   } 
 
   // make sure it runs on first render only - assigning id to all the columns
   useEffect(() => {
-    if(type === "edit"){
-      const setId = board.columns.map((col) => ({...col, id:uuid()}));
+    if(type === "edit" && board){
+      const setId = board.columns?.map((col) => ({...col, id:uuid()}));
       setColumns(setId);
+      setName(board?.name);
     }
-    setName(board?.name);
+   
   },[])
 
   return (
@@ -115,7 +129,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
           <span className="text-gray-500 dark:text-white text-sm"> Board Columns </span>
           <div className="max-h-[150px] overflow-y-scroll" ref={taskSectionRef}>
           {
-            columns.map((column, index) => (
+            columns?.map((column, index) => (
               <div key={index} className="flex items-center w-full">
                   <input
                   className="flex-grow px-4 py-2 rounded-md bg-transparent border border-gray-600 outline-none focus:outline-[#735fc7]"
@@ -123,7 +137,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
                   onChange={(event) => {handleColumnNameChange(column.id, event.target.value)} }
                   />
 
-                  {/* adding delete column icon */}
+                  {/* delete column icon */}
                   <span className="m-4 cursor-pointer" onClick={() => handleDeleteColumn(column.id)}>
                    <FontAwesomeIcon icon={faXmark} />
                   </span>

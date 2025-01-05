@@ -24,7 +24,7 @@ const SideNav = () => {
     }
 
   return (
-    <div className={`${isMenuOpen ? "lg:w-1/5 w-1/3" : "w-10"} relative duration-300 h-screen  bg-slate-950 text-white flex flex-col items-center`}>
+    <div className={`${isMenuOpen ? "lg:w-1/5 w-1/3" : "w-10"} relative  duration-300 h-screen  bg-slate-950 text-white flex flex-col items-center`}>
 
         <div className={`cursor-pointer ${!isMenuOpen && "rotate-180"} absolute -right-3 top-9 w-6 text-purple-700 text-xl`}>
          <FontAwesomeIcon  icon={faCircleChevronLeft} onClick={() => setIsMenuOpen(prev => !prev)} />

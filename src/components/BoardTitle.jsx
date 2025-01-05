@@ -20,10 +20,11 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
     const [mode, setMode] = useState('add'); // board mode - add | edit
     const [isDeleteModelOpen , setIsDeleteModelOpen] = useState(false);
     const boards = useSelector((state) => state.boards);
+    console.log("boards",typeof boards,boards)
     const board = boards?.find((board) => board.isActive);  
     const dispatch = useDispatch();
 // for displaying boards
-    const activeBoard = boards.find((board) => board.isActive);
+    const activeBoard = boards?.find((board) => board.isActive);
   
     
 
@@ -93,13 +94,20 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
                 + 
             </button>
 
-            <span className="cursor-pointer m-3" onClick={handleEllipsis} >
-            <FontAwesomeIcon icon={faEllipsisVertical} />
-            </span>
+            {/* ellipsis option */}
+            {   
+                boards.length > 0 &&
+                <span className="cursor-pointer m-3" onClick={handleEllipsis} >
+                 <FontAwesomeIcon icon={faEllipsisVertical} />
+                </span>
+            }
+            
+            
             {
-                isEllipsisOpen && <EllipsisOptions type="Boards"
+                isEllipsisOpen  && <EllipsisOptions type="Boards"
                 openBoardModelForEditing={openBoardModelForEditing}
-                openBoardModelForDeleting={openBoardModelForDeleting} />
+                openBoardModelForDeleting={openBoardModelForDeleting}
+                setMode={setMode} /> 
             }
         </div>
 
@@ -111,6 +119,9 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
         </div>
 
         {/* modal to create new board */}
+        {
+            console.log("mode",mode)
+        }
         {
             isBoardModalOpen && <CreareAndEditBoard setIsBoardModalOpen={setIsBoardModalOpen} type={mode} /> // type = board mode
         }
@@ -125,11 +136,11 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
             isDeleteModelOpen && <EllipsisDeleteModel type="board" title={board.name} setIsDeleteModelOpen={setIsDeleteModelOpen} deleteOnclick={deleteOnclick} />
         }
 
-        {/* board area */}
+        {/* board area style={{maxHeight:`calc(100vh - 65px)`}} */}
         {
             boards.length > 0 ? 
-            <div className="flex-grow">
-                <BoardArea isBoardModalOpen={isBoardModalOpen} setIsBoardModalOpen={setIsBoardModalOpen} />
+            <div id="below-header" className='flex-grow' >
+                <BoardArea isBoardModalOpen={isBoardModalOpen} setIsBoardModalOpen={setIsBoardModalOpen} mode={mode} setMode={setMode} />
             </div>
             :
             <div className="flex-grow">

@@ -19,7 +19,7 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
     const isBoardActive = boards?.find(brd => brd.isActive);
     const columns = isBoardActive?.columns; // options for select tag
     const col = columns?.find((col, index) => prevColIndex === index);
-    const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
+    const task = col ? col?.tasks?.find((task, index) => index === taskIndex) : [];
     const [status, setStatus] = useState(columns[prevColIndex]?.name);
     const [newColIndex, setNewColIndex] = useState(0); // after changing the task from one column to another - index mentions the status(todo,doing,done)
 
@@ -69,6 +69,7 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
     function handleTaskValidation(){
         // check the task has its own name
         if(!title){
+            alert("Please Enter Your Task Name");
           return 
         }
     
@@ -78,7 +79,7 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
             return 
           }
         }
-    
+        
         // if there is no error in validation then perform add/edit operation
         handleAddOrEditTask(true)
     }

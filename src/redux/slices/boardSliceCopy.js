@@ -1,32 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import data from "../../data/data.json";
 
-// get data from local storage
-function getDataFromLocal(){
-    const data = localStorage.getItem("boardsData");
-    if(!data){
-        return null
-    }
-    return JSON.parse(data).boards
-}
-
-
-// save data to local storage
-function saveDataInLocal(data){
-    const boardsData = {boards:[...JSON.parse(JSON.stringify(data))]}
-    localStorage.setItem("boardsData", JSON.stringify(boardsData));
-    console.log("updated data",)
-    // return boardsData
-    // return data
-}
-
-const initialState = getDataFromLocal() || [];
-console.log("*",initialState)
 
 const boardsSlice = createSlice({
     name:"boards",
-    initialState: initialState,
-    // initialState: data?.boards,
+    initialState: data?.boards,
     reducers : {
         // add new board
         addBoard: (state, action) => {
@@ -35,12 +13,10 @@ const boardsSlice = createSlice({
             const board = {
                 name: payload.name,
                 isActive: isActive,
-                columns: payload.columns ? payload.columns : []
+                columns: []
             };
-            // board.columns = payload.newColumns;
+            board.columns = payload.newColumns;
             state.push(board);
-            console.log("add board",board)
-            saveDataInLocal(state);
         },
 
         // edit board
@@ -53,14 +29,12 @@ const boardsSlice = createSlice({
                 board.name = payload.name;
                 board.columns = payload.columns;
             }
-            saveDataInLocal(state);
         },
 
         // delete board
         deleteBoard: (state, action) => {
             const board = state.find((board) => board.isActive);
             state.splice(state.indexOf(board), 1);
-            saveDataInLocal(state);
         },
 
         // set board status 
@@ -74,7 +48,6 @@ const boardsSlice = createSlice({
                 }
                 return board
             });
-            saveDataInLocal(state);
         },
 
         /////////////////////////////////////// reducers for task //////////////////////////////////
@@ -84,11 +57,8 @@ const boardsSlice = createSlice({
             const {title, description, subTasks, newColIndex, status} = action.payload;
             const task = {title, description, subTasks, status};
             const board = state.find((board) => board.isActive);
-            console.log("active board-add task ",board);
             const column = board.columns.find((col,index) => index === newColIndex);
-            console.log('col', column)
             column?.tasks.push(task);
-            saveDataInLocal(state);
         },
 
         // edit task
@@ -107,7 +77,6 @@ const boardsSlice = createSlice({
             column.tasks = column.tasks.filter((task, index) => index !== taskIndex);
             const newCol = board.columns.find((col, index) => index === newColIndex);
             newCol.tasks.push(task);
-            saveDataInLocal(state);
         },
 
         // drag task
@@ -118,7 +87,6 @@ const boardsSlice = createSlice({
             const task = prevCol.tasks.splice(taskIndex , 1)[0]; // splicing the particular task from that column
             board.columns.find((col, i) => i === colIndex)?.tasks.push(task); // fetching the destination column and pushing the spliced task into the destination column
             console.log("drag action called",prevColIndex,colIndex,taskIndex)
-            saveDataInLocal(state);
         },
 
         // update when sub-task is completed
@@ -129,7 +97,6 @@ const boardsSlice = createSlice({
             const task = column.tasks.find((task, index) => index === payload.taskIndex); 
             const subTask = task.subTasks.find((subTask, index) => index === payload.index);
             subTask.isCompleted = !subTask.isCompleted;
-            saveDataInLocal(state);
         },
 
         // set task status
@@ -146,7 +113,6 @@ const boardsSlice = createSlice({
             column.tasks = column.tasks.filter((task, index) => index !== payload.taskIndex);
             const newColumn = columns.find((column, index) => index === payload.newColIndex);
             newColumn.tasks.push(task);
-            saveDataInLocal(state);
         },
 
         // delete task
@@ -155,7 +121,6 @@ const boardsSlice = createSlice({
             const board = state.find((board) => board.isActive);
             const column = board.columns.find((column, index) => index === payload.colIndex);
             column.tasks = column.tasks.filter((task, index) => index !== payload.taskIndex);
-            saveDataInLocal(state);
         }
 
     }

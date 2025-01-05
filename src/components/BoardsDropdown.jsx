@@ -11,23 +11,23 @@ const BoardsDropdown = ({setIsDropDownOpen, setIsBoardModalOpen}) => {
   
 
   function handleDropdown(event){
-        if(event.target !== event.currentTarget){
-            return
-        }
-        setIsDropDownOpen(false);
+    if(event.target !== event.currentTarget){
+      return
+    }
+    setIsDropDownOpen(false);
   }
 
   // create new board
   function createBoard(){
-      setIsBoardModalOpen(true);
-      setIsDropDownOpen(false);
+    setIsBoardModalOpen(true);
+    setIsDropDownOpen(false);
   }
 
   return (
-    <div className="absolute left-10 bottom-0  top-[60px] right-0  bg-[#00000080] px-4 py-6" onClick={(event) => handleDropdown(event) }>
+    <div className="absolute left-10 bottom-0  top-[65px] right-0  bg-[#00000080] px-4 py-6" onClick={(event) => handleDropdown(event) }>
 
       {/* dropdown modal */}
-      <div className="bg-white dark:bg-[#2b2c37] shadow-md shadow-[#364e7e1a] w-full py-4 rounded-xl">
+      <div className="bg-white dark:bg-[#2b2c37] shadow-md shadow-[#364e7e1a] w-full p-4 rounded-xl">
 
         <h3 className="dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8">
           All Boards - ({boards?.length})
@@ -36,7 +36,7 @@ const BoardsDropdown = ({setIsDropDownOpen, setIsBoardModalOpen}) => {
         <div>
           {
             boards.map((board, index) => (
-              <div key={index} className={`flex items-baseline space-x-2 px-5 py-4 ${board.isActive && "bg-[#635fc7] text-white rounded-full mr-8"} cursor-pointer`}
+              <div key={index} className={`flex items-baseline space-x-2 px-5 py-4 ${board.isActive && "bg-[#635fc7] text-white rounded-full mr-8"} cursor-pointer ${!board.isActive && "hover:bg-[#7472b6] rounded-full mr-8"}`}
                onClick={ () => dispatch(setBoardStatusActive({index})) } >
 
                 <span>
