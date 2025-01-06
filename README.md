@@ -5,11 +5,11 @@ Welcome to the Kanban Board project! This is a web application that allows users
 ## Table of Contents
 
 - [Features](#features)
-- [Demo](#demo)
+- [Snapshot](#snapshot)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Color-Code](#task-priority-color-reference)
+
 
 ## Features
 
@@ -22,9 +22,6 @@ Welcome to the Kanban Board project! This is a web application that allows users
 
 [![Snapshot](https://drive.google.com/uc?export=view&id=1fsYeLuBKr-M0oxQXqRVKc8XQBHCs6-QT)](https://drive.google.com/uc?export=view&id=1fsYeLuBKr-M0oxQXqRVKc8XQBHCs6-QT)
 
-## Demo
-
-You can check out a live demo of the project [here](#).
 
 ## Installation
 
