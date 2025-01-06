@@ -22,6 +22,9 @@ const TaskModel = ({colIndex, taskIndex, setIsTaskModelOpen}) => {
     const [isEllipsisOpen, setIsEllipsisOpen] = useState(false);
     const [isDeleteModelOpen, setIsDeleteModelOpen] = useState(false);
     const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+    const deadline = task.deadline;
+    const priority = task.priority;
+    const assignee = task.assignee;
 
     let completed = 0;
     subTasks.forEach((subtask) => {
@@ -50,7 +53,6 @@ const TaskModel = ({colIndex, taskIndex, setIsTaskModelOpen}) => {
     function closeTaskModel(event){
         event.stopPropagation();
         if(event.target !== event.currentTarget){
-            console.log("target",event.target,event.currentTarget)
            return
         }
         dispatch(setTaskStatus(

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
 import data from "../../data/data.json";
 
 // get data from local storage
@@ -13,11 +14,12 @@ function getDataFromLocal(){
 
 // save data to local storage
 function saveDataInLocal(data){
-    const boardsData = {boards:[...JSON.parse(JSON.stringify(data))]}
-    localStorage.setItem("boardsData", JSON.stringify(boardsData));
-    console.log("updated data",)
-    // return boardsData
-    // return data
+    // Use Lodash to deep clone the state to avoid circular references 
+    const cleanedData = _.cloneDeep(data); 
+    console.log("clone",cleanedData)
+    const boardsData = { boards: cleanedData }; 
+    localStorage.setItem("boardsData", JSON.stringify(boardsData)); 
+    console.log("Updated data:",boardsData);
 }
 
 const initialState = getDataFromLocal() || [];
@@ -78,13 +80,12 @@ const boardsSlice = createSlice({
         },
 
         /////////////////////////////////////// reducers for task //////////////////////////////////
-
+        
         // add task
         addTask: (state,action) => {
-            const {title, description, subTasks, newColIndex, status} = action.payload;
-            const task = {title, description, subTasks, status};
+            const {title, description, newColIndex, status, subTasks, deadline, priority, assignee} = action.payload;
+            const task = {title, description, status, subTasks, deadline, priority, assignee};
             const board = state.find((board) => board.isActive);
-            console.log("active board-add task ",board);
             const column = board.columns.find((col,index) => index === newColIndex);
             console.log('col', column)
             column?.tasks.push(task);
@@ -93,7 +94,8 @@ const boardsSlice = createSlice({
 
         // edit task
         editTask: (state, action) => {
-            const {title, status, description, subTasks, prevColIndex, newColIndex, taskIndex} = action.payload;
+            const {title, status, description, subTasks, prevColIndex, newColIndex, taskIndex, deadline, priority, assignee} = action.payload;
+            console.log("deadline",prevColIndex,newColIndex)
             const board = state.find((board) => board.isActive);
             const column = board.columns.find((col, index) => index === prevColIndex);
             const task = column.tasks.find((task, index) => index === taskIndex);
@@ -101,9 +103,12 @@ const boardsSlice = createSlice({
             task.description = description;
             task.subTasks = subTasks;
             task.status = status;
-            if(prevColIndex === newColIndex){
-                return
-            }
+            task.priority = priority;
+            task.assignee = assignee;
+            task.deadline = deadline;
+            // if(prevColIndex === newColIndex){
+            //     return
+            // }
             column.tasks = column.tasks.filter((task, index) => index !== taskIndex);
             const newCol = board.columns.find((col, index) => index === newColIndex);
             newCol.tasks.push(task);

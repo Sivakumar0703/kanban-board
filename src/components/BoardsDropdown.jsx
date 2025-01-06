@@ -24,7 +24,7 @@ const BoardsDropdown = ({setIsDropDownOpen, setIsBoardModalOpen}) => {
   }
 
   return (
-    <div className="absolute left-10 bottom-0  top-[65px] right-0  bg-[#00000080] px-4 py-6" onClick={(event) => handleDropdown(event) }>
+    <div className="absolute left-10 bottom-0  top-[65px] right-0  bg-[#00000080] px-4 py-6 z-50" onClick={(event) => handleDropdown(event) }>
 
       {/* dropdown modal */}
       <div className="bg-white dark:bg-[#2b2c37] shadow-md shadow-[#364e7e1a] w-full p-4 rounded-xl">

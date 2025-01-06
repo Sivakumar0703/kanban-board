@@ -20,7 +20,7 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
     const [mode, setMode] = useState('add'); // board mode - add | edit
     const [isDeleteModelOpen , setIsDeleteModelOpen] = useState(false);
     const boards = useSelector((state) => state.boards);
-    console.log("boards",typeof boards,boards)
+    // console.log("boards",typeof boards,boards)
     const board = boards?.find((board) => board.isActive);  
     const dispatch = useDispatch();
 // for displaying boards
@@ -107,7 +107,8 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
                 isEllipsisOpen  && <EllipsisOptions type="Boards"
                 openBoardModelForEditing={openBoardModelForEditing}
                 openBoardModelForDeleting={openBoardModelForDeleting}
-                setMode={setMode} /> 
+                setMode={setMode} 
+                /> 
             }
         </div>
 

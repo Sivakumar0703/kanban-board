@@ -6,9 +6,23 @@ export default {
   ],
   theme: {
     extend: {
+      // to hide scrollbar
       scrollbar: {
         hide: 'scrollbar-hidden'
+      },
+
+      // blinking animation
+      keyframes: {
+        pulse: {
+          '0%': {opacity:1},
+          '50%': {opacity:0.6},
+          '100%': {opacity:1},
+        },
+        animation: {
+          pulse: 'pulse 10s infinite'
+        }
       }
+
     },
   },
   plugins: [
