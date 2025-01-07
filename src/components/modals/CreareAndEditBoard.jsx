@@ -145,14 +145,14 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
         {/* add new column button */}
         <div>
           <button 
-          className="py-2 mt-2 rounded-full hover:opacity-75 dark:text-[#635fc7] dark:bg-white text-white w-full text-center"
+          className="py-2 mt-2 rounded-full hover:opacity-75 bg-[#635fc7]  dark:text-[#635fc7] dark:bg-white text-white w-full text-center"
           onClick={handleAddColumn}>
             + Add New Column
           </button>
 
           {/* add/edit board button */}
           <button
-          className="mt-8 py-2 hover:opacity-75 dark:text-white dark:bg-[#635fc7] text-white relative w-full"
+          className="mt-8 py-2 hover:opacity-75 bg-[#635fc7] dark:text-white dark:bg-[#635fc7] text-white relative w-full"
           onClick={handleBoardValidation}>
             {
               type === "add" ? "Create New Board" : "Save Changes"

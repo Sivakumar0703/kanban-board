@@ -1,12 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { taskContext } from '../context/KanbanTaskContext';
 import SideNav from './SideNav';
 import { useContext } from 'react';
 
 const Settings = () => {
 
-    const {showAssignee, showProgressBar, showAddColumn, showFilter, setShowAssignee, setShowProgressBar, setShowAddColumn, setShowFilter} = useContext(taskContext);
+    const {showAssignee, showProgressBar, showAddColumn, showFilter, showNav, setShowAssignee, setShowProgressBar, setShowAddColumn, setShowFilter, setShowNav} = useContext(taskContext);
     const inputStyle = "h-[18px] w-[18px] m-2";
     const labelStyle = "text-xl cursor-pointer m-2";
+    const navigate = useNavigate();
     
     
     function saveChanges(){
@@ -14,9 +16,11 @@ const Settings = () => {
             assignee:showAssignee,
             progressbar:showProgressBar,
             addcolumn:showAddColumn,
-            filter:showFilter
+            filter:showFilter,
+            nav:showNav
         };
         localStorage.setItem("settings", JSON.stringify(options));
+        navigate('/board');
     }
 
   return (
@@ -24,10 +28,10 @@ const Settings = () => {
     className="flex bg-white dark:bg-[#2b2c37] text-black dark:text-white w-full h-full"
     >
         {/* sidenav */}
-        <SideNav />
+        {showNav && <SideNav />}
 
         {/* main area */}
-        <div className='flex flex-col justify-center items-center w-full border-2 border-purple-600 space-y-10'>
+        <div className='flex flex-col justify-center items-center h-[100vh] w-full border-2 border-purple-600 space-y-10'>
 
             <div>
             <div className='m-3'>
@@ -65,6 +69,16 @@ const Settings = () => {
                 {/* show filter */}
                 <input type='checkbox' className={inputStyle} id='filter' value={showFilter} onChange={(event) => setShowFilter(event.target.checked)} checked={showFilter} />
                 <label htmlFor='filter' className={labelStyle}> Show Filter Option </label>
+
+            </div>
+
+            <div className='m-3'>
+            <hr/>
+                <h3 className='font-semibold text-2xl p-2'>Navigation Setting</h3>
+
+                {/* side nav */}
+                <input type='checkbox' className={inputStyle} id='nav' value={showNav} onChange={(event) => setShowNav(event.target.checked)} checked={showNav} />
+                <label htmlFor='nav' className={labelStyle}> Show Navigation Bar </label>
 
             </div>
             </div>

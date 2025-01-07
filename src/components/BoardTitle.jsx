@@ -96,13 +96,18 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
             </button>
 
             <button className="px-3 py-1 m-2 h-8 bg-slate-50 text-black md:hidden rounded-full text-center"
-            onClick={() => setIsTaskModelOpen(prev => !prev)}>
+            onClick={() => {
+                if(boards?.length <= 0){
+                    alert("Please Create a Board First");
+                    return
+                }
+                setIsTaskModelOpen(prev => !prev)
+            }}>
                 + 
             </button>
 
             {/* ellipsis option */}
-            {   
-                boards.length > 0 &&
+            { 
                 <span className="cursor-pointer m-3" onClick={handleEllipsis} >
                  <FontAwesomeIcon icon={faEllipsisVertical} />
                 </span>
@@ -113,6 +118,7 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
                 isEllipsisOpen  && <EllipsisOptions type="Boards"
                 openBoardModelForEditing={openBoardModelForEditing}
                 openBoardModelForDeleting={openBoardModelForDeleting}
+                setIsEllipsisOpen={setIsEllipsisOpen}
                 setMode={setMode} 
                 /> 
             }

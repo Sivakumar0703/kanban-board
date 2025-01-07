@@ -9,6 +9,7 @@ const KanbanTaskContext = ({children}) => {
   const [showProgressBar, setShowProgressBar] = useState(storedSettings.progressBar || true);
   const [showAddColumn, setShowAddColumn] = useState(storedSettings.addcolumn || false);
   const [showFilter, setShowFilter] = useState(storedSettings.filter || true);
+  const [showNav, setShowNav] = useState(storedSettings.nav || true)
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   
 
@@ -23,6 +24,8 @@ const KanbanTaskContext = ({children}) => {
       setShowAddColumn,
       showFilter, 
       setShowFilter,
+      showNav, 
+      setShowNav,
       isBoardModalOpen, 
       setIsBoardModalOpen
       }}>

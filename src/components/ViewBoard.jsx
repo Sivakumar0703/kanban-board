@@ -6,12 +6,12 @@ import { taskContext } from '../context/KanbanTaskContext';
 
 const ViewBoard = () => {
 
-  const {isBoardModalOpen, setIsBoardModalOpen} = useContext(taskContext);
+  const {isBoardModalOpen, setIsBoardModalOpen, showNav} = useContext(taskContext);
 
 
   return (
     <div className="flex">
-      <SideNav />
+      {showNav && <SideNav />}
       <BoardTitle isBoardModalOpen={isBoardModalOpen} setIsBoardModalOpen={setIsBoardModalOpen} />
     </div>
   )
