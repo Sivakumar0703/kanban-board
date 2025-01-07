@@ -1,11 +1,12 @@
 import SideNav from './SideNav';
 import BoardTitle from './BoardTitle';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { taskContext } from '../context/KanbanTaskContext';
 
 
 const ViewBoard = () => {
 
-  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const {isBoardModalOpen, setIsBoardModalOpen} = useContext(taskContext);
 
 
   return (

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Task from "./Task";
 import { dragTask } from "../redux/slices/boardsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import FilterModel from "./modals/FilterModel";
+import { taskContext } from "../context/KanbanTaskContext";
 
 const Column = ({colIndex}) => {
 
@@ -14,6 +15,7 @@ const Column = ({colIndex}) => {
     const tasks = column?.tasks;
     const dispatch = useDispatch();
     const [isFilterModelOpen, setIsFilterModelOpen] = useState(false);
+    const {showFilter} = useContext(taskContext);
     
 
     function handleOnDragover(event){
@@ -42,6 +44,7 @@ const Column = ({colIndex}) => {
             <span className="flex-grow font-semibold">{column.name} {column.tasks?.length}</span>
             {
                 column?.tasks?.length > 0 && 
+                showFilter &&
                 <span className="w-3 h-2 text-[#505153] text-sm cursor-pointer hover:text-black dark:hover:text-slate-100" onClick={() => setIsFilterModelOpen(prev => !prev)}>
                  <FontAwesomeIcon icon={faFilter} />
                 </span>

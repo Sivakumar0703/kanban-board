@@ -1,15 +1,15 @@
-import { faChartPie, faGear, faHouse, faListCheck, faCircleChevronLeft, faK, faCircleUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faGear, faHouse, faListCheck, faCircleChevronLeft, faK, faCircleUser, faRightFromBracket, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ToggleTheme from './ToggleTheme';
 import useDarkMode from '../Hooks/useDarkMode';
+import { Link, useNavigate } from 'react-router-dom';
+import { taskContext } from '../context/KanbanTaskContext';
 
 
 const menus = [
-    {option:"Home", icon:faHouse},
-    {option:"Dashboard", icon:faChartPie},
-    {option:"Settings", icon:faGear},
-    // {option:"Boards", icon:faListCheck}
+    {option:"Home", icon:faHouse, route:"/board"},
+    {option:"Settings", icon:faGear, route:"/settings"},
 ];
 
 
@@ -17,10 +17,21 @@ const SideNav = () => {
     const [isMenuOpen , setIsMenuOpen] = useState(false);
     const [colorTheme, setTheme] = useDarkMode();
     const[isDark, setIsDark] = useState(colorTheme === "light" ? true : false);
+    const {setIsBoardModalOpen} = useContext(taskContext);
+    const navigate = useNavigate();
 
     function toggleDarkMode(){
         setTheme(colorTheme);
         setIsDark(prev => !prev);
+    }
+
+    function createNewBoard(){
+        const url = window.location.href;
+        const page = url.substring(url.lastIndexOf('/'));
+        if(page !== "/board"){
+            navigate('/board');
+        }
+        setIsBoardModalOpen(true);
     }
 
 
@@ -50,7 +61,8 @@ const SideNav = () => {
         <ul className={`${!isMenuOpen && "flex flex-col items-center"} mt-5`}>
         {
             menus.map((menuItem) => (
-                <li className='flex items-center text-gray-300 gap-x-4 cursor-pointer p-2 rounded-lg hover:bg-yellow-100' key={menuItem.option}>
+                <li  key={menuItem.option}>
+                    <Link to={menuItem.route} className='flex items-center text-gray-300 gap-x-4 cursor-pointer p-2 rounded-lg hover:bg-purple-300'>
                     <span>
                         <FontAwesomeIcon icon={menuItem.icon} /> 
                     </span>
@@ -58,10 +70,20 @@ const SideNav = () => {
                     <span className={`${!isMenuOpen && "hidden"} origin-left duration-200`}>
                         {menuItem.option}
                     </span>
-
+                    </Link>
                 </li>
             ))
         }
+            {/* add board */}
+            <li className='flex items-center text-gray-300 gap-x-4 cursor-pointer p-2 rounded-lg hover:bg-purple-300' onClick={createNewBoard}>
+                <span>
+                    <FontAwesomeIcon icon={faPlus} /> 
+                </span>
+
+                <span className={`${!isMenuOpen && "hidden"} origin-left duration-200`}>
+                    Add Board
+                </span>
+            </li>
         </ul>
 
         
@@ -69,7 +91,7 @@ const SideNav = () => {
         <div className='absolute bottom-0 p-2 flex flex-col items-center cursor-pointer mb-5'>
 
             {/* theme switch */}
-            <div className='mb-5 flex items-center gap-x-4 mr-1 hover:bg-yellow-100 p-2 rounded-lg' onClick={toggleDarkMode}>
+            <div className='mb-5 flex items-center gap-x-4 mr-1  p-2 rounded-lg' onClick={toggleDarkMode}>
               <ToggleTheme isDark={isDark} />
               <span className={`${!isMenuOpen && "hidden"} origin-left duration-200`}>Mode</span>
             </div>

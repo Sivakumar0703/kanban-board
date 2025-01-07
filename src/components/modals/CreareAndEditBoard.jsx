@@ -18,6 +18,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
   const taskSectionRef = useRef(null);
   const allBoards = useSelector((state) => state.boards);
 
+
   function handleModel(event){
     if(event.target !== event.currentTarget){
       return
@@ -64,6 +65,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
   function handleBoardValidation(){
     // check the board has its own name
     if(!name){
+      alert("Please enter your board name")
       return 
     }
 

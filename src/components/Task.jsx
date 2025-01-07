@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useSelector } from 'react-redux';
 import TaskModel from './modals/TaskModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { taskContext } from '../context/KanbanTaskContext';
 
 const Task = ({colIndex, taskIndex}) => {
 
@@ -13,6 +14,7 @@ const Task = ({colIndex, taskIndex}) => {
     const task = column.tasks.find((task, index) => index === taskIndex );
     const deadline = task.deadline;
     const priority = task.priority;
+    const {showAssignee, showProgressBar} = useContext(taskContext);
 
     let completed = 0;
     let subTasks = task?.subTasks;
@@ -62,12 +64,14 @@ const Task = ({colIndex, taskIndex}) => {
             {task.title}
         </p>
 
+       {    showAssignee &&
         <p className="text-xs font-bold tracking-tighter mt-1 text-gray-500">
-            <span className="h-4 w-4 mr-2">
-            <FontAwesomeIcon icon={faCircleUser} />
-            </span>
-            {task.assignee}
+         <span className="h-4 w-4 mr-2">
+         <FontAwesomeIcon icon={faCircleUser} />
+         </span>
+         {task.assignee}
         </p>
+       }
 
         {/* <p className="text-xs font-bold tracking-tighter mt-1 text-gray-500">
             {completed} of {subTasks.length} completed tasks
@@ -77,11 +81,13 @@ const Task = ({colIndex, taskIndex}) => {
             Deadline - {task.deadline}
         </p>
 
+       { showProgressBar &&
         <div className="text-xs font-bold tracking-tighter mt-1 text-gray-500">
-            <label htmlFor="task-completion"> Completion: </label>
-            <progress id="task-completion" max="100" value={calculateTaskCompletionPercentage()} className="h-[5px]">  {calculateTaskCompletionPercentage()} </progress>
-            <span> {calculateTaskCompletionPercentage()}% </span>
+         <label htmlFor="task-completion"> Completion: </label>
+         <progress id="task-completion" max="100" value={calculateTaskCompletionPercentage()} className="h-[5px]">  {calculateTaskCompletionPercentage()} </progress>
+         <span> {calculateTaskCompletionPercentage()}% </span>
         </div>
+       }
 
     </div>
 
