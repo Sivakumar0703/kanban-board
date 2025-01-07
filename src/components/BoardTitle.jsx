@@ -85,7 +85,13 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
         {/* add task */}
         <div className="flex items-center">
             <button className="hidden md:block p-2 m-2 bg-slate-50 text-black rounded-lg"
-            onClick={() => setIsTaskModelOpen(prev => !prev)}> 
+            onClick={() => {
+                if(boards?.length <= 0){
+                    alert("Please Create a Board First");
+                    return
+                }
+                setIsTaskModelOpen(prev => !prev)
+            }}> 
             Add New Task + 
             </button>
 
