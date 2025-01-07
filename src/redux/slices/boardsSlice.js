@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
-import data from "../../data/data.json";
+
 
 // get data from local storage
 function getDataFromLocal(){
@@ -23,12 +23,11 @@ function saveDataInLocal(data){
 }
 
 const initialState = getDataFromLocal() || [];
-console.log("*",initialState)
+
 
 const boardsSlice = createSlice({
     name:"boards",
     initialState: initialState,
-    // initialState: data?.boards,
     reducers : {
         // add new board
         addBoard: (state, action) => {
@@ -39,9 +38,7 @@ const boardsSlice = createSlice({
                 isActive: isActive,
                 columns: payload.columns ? payload.columns : []
             };
-            // board.columns = payload.newColumns;
             state.push(board);
-            console.log("add board",board)
             saveDataInLocal(state);
         },
 
@@ -50,7 +47,6 @@ const boardsSlice = createSlice({
             console.log("state",state)
             const payload = action.payload;
             const board = state.find((board) => board.isActive);
-            console.log("active board ",board)
             if(board){
                 board.name = payload.name;
                 board.columns = payload.columns;
@@ -87,7 +83,6 @@ const boardsSlice = createSlice({
             const task = {title, description, status, subTasks, deadline, priority, assignee};
             const board = state.find((board) => board.isActive);
             const column = board.columns.find((col,index) => index === newColIndex);
-            console.log('col', column)
             column?.tasks.push(task);
             saveDataInLocal(state);
         },
@@ -95,7 +90,6 @@ const boardsSlice = createSlice({
         // edit task
         editTask: (state, action) => {
             const {title, status, description, subTasks, prevColIndex, newColIndex, taskIndex, deadline, priority, assignee} = action.payload;
-            console.log("deadline",prevColIndex,newColIndex)
             const board = state.find((board) => board.isActive);
             const column = board.columns.find((col, index) => index === prevColIndex);
             const task = column.tasks.find((task, index) => index === taskIndex);
@@ -106,9 +100,6 @@ const boardsSlice = createSlice({
             task.priority = priority;
             task.assignee = assignee;
             task.deadline = deadline;
-            // if(prevColIndex === newColIndex){
-            //     return
-            // }
             column.tasks = column.tasks.filter((task, index) => index !== taskIndex);
             const newCol = board.columns.find((col, index) => index === newColIndex);
             newCol.tasks.push(task);
@@ -122,7 +113,6 @@ const boardsSlice = createSlice({
             const prevCol = board.columns.find((col, index) => index === prevColIndex ); // fetching the column where the task actually is
             const task = prevCol.tasks.splice(taskIndex , 1)[0]; // splicing the particular task from that column
             board.columns.find((col, i) => i === colIndex)?.tasks.push(task); // fetching the destination column and pushing the spliced task into the destination column
-            console.log("drag action called",prevColIndex,colIndex,taskIndex)
             saveDataInLocal(state);
         },
 
@@ -161,6 +151,15 @@ const boardsSlice = createSlice({
             const column = board.columns.find((column, index) => index === payload.colIndex);
             column.tasks = column.tasks.filter((task, index) => index !== payload.taskIndex);
             saveDataInLocal(state);
+        },
+
+        sortTask: (state, action) => {
+            const payload = action.payload;
+            const board = state.find((board) => board.isActive);
+            const columns = board.columns;
+            const column = columns.find((column, index) => index === payload.colIndex);
+            column.tasks = payload.tasks;
+            saveDataInLocal(state);
         }
 
     }
@@ -173,10 +172,12 @@ export const {
     editBoard,
     deleteBoard,
     setBoardStatusActive,
-    addTask, // task
+    // task reducer
+    addTask, 
     editTask,
     dragTask, 
     updateSubTaskWhenCompleted, 
     setTaskStatus, 
-    deleteTask
+    deleteTask,
+    sortTask
 } = boardsSlice.actions;

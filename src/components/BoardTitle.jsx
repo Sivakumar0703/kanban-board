@@ -1,16 +1,15 @@
-import { faChevronDown, faChevronUp, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import BoardsDropdown from './BoardsDropdown'
-import CreareAndEditBoard from './modals/CreareAndEditBoard'
-import { useDispatch, useSelector } from 'react-redux'
-import CreateAndEditTask from './modals/CreateAndEditTask'
-import EllipsisOptions from './EllipsisOptions'
-import EllipsisDeleteModel from './modals/EllipsisDeleteModel'
-import { deleteBoard, setBoardStatusActive } from '../redux/slices/boardsSlice'
-import EmptyBoard from './EmptyBoard'
-import BoardArea from './BoardArea'
+import { faChevronDown, faChevronUp, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState, useEffect } from 'react';
+import BoardsDropdown from './BoardsDropdown';
+import CreareAndEditBoard from './modals/CreareAndEditBoard';
+import { useDispatch, useSelector } from 'react-redux';
+import CreateAndEditTask from './modals/CreateAndEditTask';
+import EllipsisOptions from './EllipsisOptions';
+import EllipsisDeleteModel from './modals/EllipsisDeleteModel';
+import { deleteBoard, setBoardStatusActive } from '../redux/slices/boardsSlice';
+import EmptyBoard from './EmptyBoard';
+import BoardArea from './BoardArea';
 
 const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
 
@@ -20,11 +19,9 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
     const [mode, setMode] = useState('add'); // board mode - add | edit
     const [isDeleteModelOpen , setIsDeleteModelOpen] = useState(false);
     const boards = useSelector((state) => state.boards);
-    // console.log("boards",typeof boards,boards)
     const board = boards?.find((board) => board.isActive);  
     const dispatch = useDispatch();
-// for displaying boards
-    const activeBoard = boards?.find((board) => board.isActive);
+    const activeBoard = boards?.find((board) => board.isActive); // for displaying boards
   
     
 
@@ -61,7 +58,7 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
         setIsDeleteModelOpen(false);
     }
 
-    // /////////////////////////////////
+
     useEffect(() => {
         if(!activeBoard && boards.length > 0){
           dispatch(setBoardStatusActive({index:0}));
@@ -71,15 +68,18 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
   return (
     <div className="flex flex-col h-[100vh] w-screen">
 
-    <div className="flex justify-between items-center h-[65px] bg-blue-700">
+    <div className="flex justify-between items-center h-[65px] bg-purple-300">
         {/* board name */}
         <div className="flex items-baseline">
             <h1 className="ml-5 text-lg md:text-2xl font-extrabold"> {board?.name?.toUpperCase()} </h1>
 
             {/* dropdown */}
-            <span className="cursor-pointer ml-2" onClick={handleDropdown}>
-            <FontAwesomeIcon icon={isDropDownOpen ? faChevronUp : faChevronDown} />
-            </span>
+            {
+                boards.length > 0 &&
+                <span className="cursor-pointer ml-2" onClick={handleDropdown}>
+                <FontAwesomeIcon icon={isDropDownOpen ? faChevronUp : faChevronDown} />
+                </span>
+            }
         </div>
 
         {/* add task */}
@@ -120,9 +120,6 @@ const BoardTitle = ({isBoardModalOpen, setIsBoardModalOpen}) => {
         </div>
 
         {/* modal to create new board */}
-        {
-            console.log("mode",mode)
-        }
         {
             isBoardModalOpen && <CreareAndEditBoard setIsBoardModalOpen={setIsBoardModalOpen} type={mode} /> // type = board mode
         }

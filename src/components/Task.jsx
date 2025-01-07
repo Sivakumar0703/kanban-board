@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux';
 import TaskModel from './modals/TaskModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,11 +13,6 @@ const Task = ({colIndex, taskIndex}) => {
     const task = column.tasks.find((task, index) => index === taskIndex );
     const deadline = task.deadline;
     const priority = task.priority;
-    // console.log("is-task-model-open",isTaskModelOpen)
-
-    // useEffect(() => {
-    //     console.log("is-task-model-open",isTaskModelOpen)
-    // },[isTaskModelOpen]);
 
     let completed = 0;
     let subTasks = task?.subTasks;
@@ -34,7 +29,12 @@ const Task = ({colIndex, taskIndex}) => {
     function calculateTaskCompletionPercentage(){
         const completedTask = completed;
         const totalTask = subTasks.length;
-        const percentage = Math.floor((completedTask/totalTask) * 100);
+        let percentage;
+        if(totalTask > 0){
+            percentage = Math.floor((completedTask/totalTask) * 100);
+        } else {
+            percentage = 0;
+        }
         return percentage
     }
 
@@ -53,7 +53,7 @@ const Task = ({colIndex, taskIndex}) => {
     <div
     className={`z-0 cursor-pointer w-[280px] py-4 px-3 overflow-hidden first:my-5 bg-white dark:text-white dark:bg-[#2b2c37] shadow-[#364e7e1a]  
         ${priority === "High" ? "border-l-4 border-red-500 hover:text-[#635fc7] dark:hover:text-[#635fc7]" : priority === "Medium" ? "border-l-4 border-blue-500 hover:text-[#635fc7] dark:hover:text-[#635fc7]" : "hover:text-[#635fc7] dark:hover:text-[#635fc7]" }
-        ${isDeadlineCrossed() ? "animate-pulse bg-[#f00] hover:text-red-600" : ""}`}
+        ${isDeadlineCrossed() ? "animate-pulse bg-[#f00] hover:text-red-600 border-4 border-dashed border-red-500" : ""}`}
     draggable
     onDragStart={handleOnDrag}
     >

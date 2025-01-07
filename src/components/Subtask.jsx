@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSubTaskWhenCompleted } from '../redux/slices/boardsSlice';
 
@@ -32,7 +31,7 @@ const Subtask = ({taskIndex, colIndex, index}) => {
         <p
         className={checked ? "line-through opacity-30" : ""}
         >
-            {subTask.title}
+          {subTask.title}
         </p>
     </div>
   )

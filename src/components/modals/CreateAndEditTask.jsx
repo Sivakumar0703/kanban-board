@@ -4,16 +4,14 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTask, editTask } from '../../redux/slices/boardsSlice';
-import { isArray } from 'lodash';
-// import { addTask, editTask } from '../../redux/slices/tasksSlice';
 
 const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevColIndex=0}) => {
 
     const [title, setTitle] = useState("");
     const [description , setDescription] = useState("");
     const [subTask, setSubTask] = useState([
-        {title:"" , isCompleted:false , id:uuid()},
-        {title:"" , isCompleted:false , id:uuid()},
+        // {title:"" , isCompleted:false , id:uuid()},
+        // {title:"" , isCompleted:false , id:uuid()},
     ]);
     const boards = useSelector(state => state.boards);
     const isBoardActive = boards?.find(brd => brd.isActive);
@@ -80,6 +78,7 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
         // check the subtask  
         for(let i=0; i<subTask.length; i++){
           if(!subTask[i].title){
+            alert("Please Fill Out The Subtask Field.If You Don't Want To Add Subtask Please Delete Them And Proceed");
             return 
           }
         }
@@ -101,7 +100,7 @@ const CreateAndEditTask = ({device, type, setIsTaskModelOpen, taskIndex, prevCol
             subTasks:subTask,
             deadline:deadline,
             priority:priority,
-            assignee:assignee
+            assignee:assignee.length > 0 ? assignee : "N/A"
         }
 
         type === "add" ? dispatch(addTask(task)) : dispatch(editTask({...task,prevColIndex,taskIndex})) ;

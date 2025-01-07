@@ -1,8 +1,7 @@
-import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setBoardStatusActive } from '../redux/slices/boardsSlice'
+import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBoardStatusActive } from '../redux/slices/boardsSlice';
 
 const BoardsDropdown = ({setIsDropDownOpen, setIsBoardModalOpen}) => {
 

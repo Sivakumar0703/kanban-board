@@ -1,14 +1,8 @@
-import React from 'react'
 
-const EllipsisOptions = ({type, openBoardModelForEditing, openBoardModelForDeleting, setMode}) => {
+const EllipsisOptions = ({type, openBoardModelForEditing, openBoardModelForDeleting}) => {
 
   function handleEditBoardOnclick(event){
     event.stopPropagation()
-    // setMode((state) => {
-    //   console.log("state",state);
-    //   return "edit"
-    // })
-    // setMode("edit");
     openBoardModelForEditing();
   }
   return (

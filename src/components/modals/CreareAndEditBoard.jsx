@@ -6,13 +6,12 @@ import {v4 as uuid} from "uuid";
 import { addBoard, editBoard, setBoardStatusActive } from '../../redux/slices/boardsSlice';
 
 const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
-  console.log("type in board model",type)
 
   const [name, setName] = useState('');
   const [columns, setColumns] = useState([
     { name:'Todo', tasks: [], id: uuid() },
-    { name:'Processing', tasks: [], id: uuid() }, // Doing
-    { name:'Completed', tasks: [], id: uuid() }, // Completed
+    { name:'Processing', tasks: [], id: uuid() }, 
+    { name:'Completed', tasks: [], id: uuid() }, 
   ]);
   const board = useSelector((state) => state.boards).find((board) => board.isActive);
   const dispatch = useDispatch();
@@ -44,7 +43,6 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
   // add a new column
   function handleAddColumn(){
     setColumns((prevCol) => {
-      console.log("perv-col", prevCol);
       if(prevCol === undefined){
         return [{name:"", tasks:[], id:uuid()}]
       }
@@ -81,16 +79,13 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
   }
 
   function handleAddOrEditBoard(hasErrorInValidation = false){
-    console.log("hasErrorInValidation" , hasErrorInValidation)
     setIsBoardModalOpen(false);
     if(hasErrorInValidation){
       type === "add" ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
     }
     if(type === "add"){
-      console.log("###########",allBoards.length)
       allBoards?.length > 0 ? dispatch(setBoardStatusActive({index:allBoards.length})) : ""  
     }
-    // hasErrorInValidation ? dispatch(addBoard({name, columns})) : dispatch(editBoard({name, columns}))   
   } 
 
   // make sure it runs on first render only - assigning id to all the columns
@@ -120,7 +115,7 @@ const CreareAndEditBoard = ({setIsBoardModalOpen, type}) => {
           <span className="dark:text-white text-gray-500"> Board Columns </span>
 
           <input className="px-4 py-2 border border-gray-600 bg-transparent focus:outline-[#365fc7] outline-1 ring-0 roundex-md outline-none" 
-          placeholder="web design" value={name} onChange={(event) => setName(event.target.value)} />
+          placeholder="Eg: Web Design" value={name} onChange={(event) => setName(event.target.value)} />
         </div>
 
 

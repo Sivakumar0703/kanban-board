@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,9 +22,6 @@ const TaskModel = ({colIndex, taskIndex, setIsTaskModelOpen}) => {
     const [isEllipsisOpen, setIsEllipsisOpen] = useState(false);
     const [isDeleteModelOpen, setIsDeleteModelOpen] = useState(false);
     const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
-    const deadline = task.deadline;
-    const priority = task.priority;
-    const assignee = task.assignee;
 
     let completed = 0;
     subTasks.forEach((subtask) => {
@@ -175,7 +172,6 @@ const TaskModel = ({colIndex, taskIndex, setIsTaskModelOpen}) => {
             setIsTaskModelOpen={setIsTaskModelOpen}
             taskIndex={taskIndex}
             prevColIndex={colIndex}
-            // setIsBoardModalOpen={setIsBoardModalOpen}
             />
         )
     }
