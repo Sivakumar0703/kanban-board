@@ -22,4 +22,3 @@ function App() {
 
 export default App;
 
-// new col hide | filter default | hide progression

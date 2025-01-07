@@ -20,7 +20,7 @@ const EmptyBoard = ({type}) => {
             }
 
             <button
-            className="relative w-full max-w-xs mt-8 py-2 font-bold text-white dark:text-white dark:bg-[#635fc7] hover:opacity-70 rounded-full items-center"
+            className="relative w-full max-w-xs mt-8 py-2 font-bold text-white bg-[#635fc7] dark:text-white dark:bg-[#635fc7] hover:opacity-70 rounded-full items-center"
             onClick={() => setIsBoardModalOpen(true)}> 
                 {
                     type === "edit" ? "+ Add New Column" : "+ Add New Board"
